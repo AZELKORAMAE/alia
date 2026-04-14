@@ -2581,28 +2581,28 @@
           </div>
         </div>
 
-        <div class="contact-form" id="contactForm">
+        <form class="contact-form" id="contactForm">
           <div class="form-row">
             <div class="field">
               <label>Prénom</label>
-              <input type="text" placeholder="Mohamed" />
+              <input type="text" name="Prénom" placeholder="Mohamed" required />
             </div>
             <div class="field">
               <label>Nom</label>
-              <input type="text" placeholder="Benali" />
+              <input type="text" name="Nom" placeholder="Benali" required />
             </div>
           </div>
           <div class="field">
             <label>Email professionnel</label>
-            <input type="email" placeholder="vous@entreprise.com" />
+            <input type="email" name="Email" placeholder="vous@entreprise.com" required />
           </div>
           <div class="field">
             <label>Entreprise</label>
-            <input type="text" placeholder="Nom de votre entreprise" />
+            <input type="text" name="Entreprise" placeholder="Nom de votre entreprise" />
           </div>
           <div class="field">
             <label>Service souhaité</label>
-            <select>
+            <select name="Service">
               <option value="" disabled selected>Choisir un service</option>
               <option>Création de Site Web</option>
               <option>Application Web</option>
@@ -2613,12 +2613,17 @@
           </div>
           <div class="field">
             <label>Votre projet</label>
-            <textarea placeholder="Décrivez votre projet, vos objectifs, votre budget estimatif..."></textarea>
+            <textarea name="Message" placeholder="Décrivez votre projet..." required></textarea>
           </div>
+
+          <input type="hidden" name="_subject" value="Nouveau message de contact - Alia Digital">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+
           <button type="submit" class="form-submit-btn magnetic" id="formSubmit">
             Envoyer le message →
           </button>
-        </div>
+        </form>
 
       </div>
     </div>
@@ -2965,13 +2970,32 @@
     /* ───────────────────────────────────────
        CONTACT FORM
     ─────────────────────────────────────── */
-    document.getElementById('formSubmit').addEventListener('click', function () {
-      this.textContent = '✓ Message envoyé avec succès !';
-      this.classList.add('sent');
-      setTimeout(() => {
-        this.textContent = 'Envoyer le message →';
-        this.classList.remove('sent');
-      }, 4000);
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('formSubmit');
+      btn.textContent = 'Envoi...';
+
+      fetch("https://formsubmit.co/ajax/azelkoramae@gmail.com", {
+        method: "POST",
+        body: new FormData(this)
+      })
+        .then(response => response.json())
+        .then(data => {
+          btn.textContent = '✓ Message envoyé avec succès !';
+          btn.classList.add('sent');
+          this.reset();
+          setTimeout(() => {
+            btn.textContent = 'Envoyer le message →';
+            btn.classList.remove('sent');
+          }, 4000);
+        })
+        .catch(error => {
+          btn.textContent = 'Erreur lors de l\'envoi';
+          setTimeout(() => {
+            btn.textContent = 'Envoyer le message →';
+          }, 4000);
+        });
     });
 
     /* ───────────────────────────────────────
